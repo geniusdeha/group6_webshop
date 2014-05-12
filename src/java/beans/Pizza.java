@@ -9,6 +9,7 @@ package beans;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,7 +26,7 @@ public class Pizza {
     private String url_db;
     private ResultSet rs = null;
     private Connection cn = null;
-    private Statement st = null;
+    private PreparedStatement st = null;
     
     public Pizza() {
     }
@@ -36,9 +37,25 @@ public class Pizza {
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            cn = DriverManager.getConnection(url_db);
-            st = cn.createStatement();
-            String query = "select * from AUTHORS;";
+            try {
+		cn = DriverManager
+		.getConnection(url_db, "root", "");
+ 
+	} catch (SQLException e) {
+		System.out.println("Connection Failed! Check output console");
+		e.printStackTrace();
+		return;
+	}
+ 
+	if (cn != null) {
+		System.out.println("You made it, take control your database now!");
+	} else {
+		System.out.println("Failed to make connection!");
+	}
+            
+            String query = "select * from AUTHORS";
+            st = cn.prepareStatement(query);
+            
             rs = st.executeQuery(query);
             System.out.println("4t5ey");
             
@@ -57,9 +74,10 @@ public class Pizza {
         try {
             int i = 0;
             out.println("in writeresult");
+ 
             while(rs.next()){
-                out.println(i);
-                out.println(rs.getString("NAME"));
+               
+                out.print("<p>" + i + " " + rs.getString("NAME") + "</p>");
                 i++;
             }
         } catch (SQLException ex) {

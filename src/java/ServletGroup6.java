@@ -25,7 +25,7 @@ public class ServletGroup6 extends HttpServlet {
         super.init(config);
         System.out.println("CFGFHFJG");
         try{
-            Pizza piz = new Pizza("jdbc:mysql://127.0.0.1:3306/booklist");
+            Pizza piz = new Pizza("jdbc:mysql://127.0.0.1:3306/");
         }
         catch(Exception e){
             throw new ServletException(e);

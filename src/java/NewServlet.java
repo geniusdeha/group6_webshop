@@ -35,7 +35,7 @@ public class NewServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         Pizza pizza = null;
         try {
-            pizza = new Pizza("jdbc:mysql://127.0.0.1:3306/");
+            pizza = new Pizza("jdbc:mysql://127.0.0.1:3306/booklist");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
