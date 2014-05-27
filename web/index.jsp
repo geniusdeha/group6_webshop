@@ -12,9 +12,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <h1>Vahid!</h1>
-        <h2>Burak!</h2>
-        <h3>Deha!</h3>
+        <a href="user">UserInterfaceServlet</a>
+        <br/>
+        <a href="admin">AdminInterfaceServlet</a>
     </body>
 </html>

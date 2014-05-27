@@ -39,7 +39,7 @@ public class Pizza {
             Class.forName("com.mysql.jdbc.Driver");
             try {
 		cn = DriverManager
-		.getConnection(url_db, "root", "");
+		.getConnection(url_db, "root", "root");
  
 	} catch (SQLException e) {
 		System.out.println("Connection Failed! Check output console");
@@ -58,12 +58,8 @@ public class Pizza {
             
             rs = st.executeQuery(query);
             System.out.println("4t5ey");
-            
-            
-            
         }
-        catch(SQLException sqle){
-            
+        catch(SQLException sqle){    
         }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
