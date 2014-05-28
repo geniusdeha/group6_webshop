@@ -5,6 +5,7 @@
  */
 
 import beans.Pizza;
+import beans.ProductIO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -31,16 +32,12 @@ public class NewServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-        Pizza pizza = null;
-        try {
-            pizza = new Pizza("jdbc:mysql://127.0.0.1:3306/booklist");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        ProductIO.initConnection("jdbc:mysql://127.0.0.1:3306/webshop");
+        ProductIO.buyPizza();
+        
         
        
         
@@ -54,7 +51,6 @@ public class NewServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
-            pizza.writeResult(out);
             out.println("</body>");
             out.println("</html>");
         }
@@ -72,7 +68,13 @@ public class NewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -86,7 +88,13 @@ public class NewServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(NewServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
