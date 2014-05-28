@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.swing.JOptionPane;
 
@@ -41,32 +43,63 @@ public class ProductIO {
 	}
     }
     
-    public static boolean buyPizza() throws SQLException{
-        String queryOlive = "select * from COMPONENTS where COMPONENT_NAME = \"olive\"";
-        PreparedStatement st = dbConnection.prepareStatement(queryOlive);
-        ResultSet rs = st.executeQuery(queryOlive);
-        rs.next();
-        int olive = rs.getInt("COUNT");
-        
-        String queryLettuce = "select * from COMPONENTS where COMPONENT_NAME = \"lettuce\"";
-        st = dbConnection.prepareStatement(queryLettuce);
-        rs = st.executeQuery(queryLettuce);
-        int lettuce;
-        rs.next();
-        lettuce = rs.getInt("COUNT");
-        
-        if(olive<1 || lettuce<4){
-            return false;
-        }
-        else{
-            String query = "update COMPONENTS set COUNT = COUNT-1 where COMPONENT_NAME = \"olive\";";
-            String query2 = "update COMPONENTS set COUNT = COUNT-4 where COMPONENT_NAME = \"lettuce\"";
-            st = dbConnection.prepareStatement(query);
-            st.execute(query);
-            st = dbConnection.prepareStatement(query2);
-            st.execute(query2);
+    public static boolean buyPizza(){
+        if(substractComponent("olive", 15) &&
+           substractComponent("lettuce", 2)){
             return true;
         }
+        else{
+            return false;
+        }
     }
+    public static boolean buyComputer(){return false;};
+    public static boolean buySalad(){return false;};
     
+    private static boolean checkAvailability(String item, int need){
+        int available = 0;
+        try {
+            String query = "select * from COMPONENTS where COMPONENT_NAME = \"" + item + "\"";
+            PreparedStatement st = dbConnection.prepareStatement(query);
+            ResultSet rs = st.executeQuery(query);
+            rs.next();
+            available = rs.getInt("COUNT");
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(available < need){
+            return false;
+        }
+        else
+            return true;
+    }
+    public static boolean substractComponent(String item, int amount){
+        if(checkAvailability(item, amount)){
+            try {
+                String query = "update COMPONENTS set COUNT = COUNT - " + amount +
+                               " where COMPONENT_NAME = \"" + item + "\";";
+                PreparedStatement st = dbConnection.prepareStatement(query);
+                st.execute(query);
+                st.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public static boolean addComponent(String item, int amount){
+        try {
+            String query = "update COMPONENTS set COUNT = COUNT + " + amount +
+                           " where COMPONENT_NAME = \"" + item + "\";";
+            PreparedStatement st = dbConnection.prepareStatement(query);
+            st.execute(query);
+            st.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            return true;
+    }
 }
