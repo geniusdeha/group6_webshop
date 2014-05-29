@@ -6,13 +6,20 @@
 
 package admin;
 
+import beans.ComponentList;
+import beans.ProductIO;
+import beans.ProductList;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import user.UserInterfaceServlet;
 
 /**
  *
@@ -51,9 +58,16 @@ public class AdminInterfaceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        out.println("Loading the admin interface...");
-        // JAVA CODE 
-        
+        out.println("Loading the user interface...");
+        try {
+            // JAVA CODE
+            ProductIO.initConnection("jdbc:mysql://127.0.0.1:3306/webshop");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserInterfaceServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ComponentList list = ProductIO.readComponents();
+        ServletContext sc = getServletContext();
+        sc.setAttribute("list", list);
         // JAVA CODE
         RequestDispatcher disp = getServletContext().getRequestDispatcher("/adminJsp.jsp");
         disp.forward(request, response);
@@ -63,7 +77,6 @@ public class AdminInterfaceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /**

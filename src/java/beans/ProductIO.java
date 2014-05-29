@@ -44,7 +44,7 @@ public class ProductIO {
     }
     
     public static boolean buyPizza(){
-        if(substractComponent("olive", 15) &&
+        if(substractComponent("olive", 5) &&
            substractComponent("lettuce", 2)){
             return true;
         }
@@ -54,6 +54,7 @@ public class ProductIO {
     }
     public static boolean buyComputer(){return false;};
     public static boolean buySalad(){return false;};
+
     
     private static boolean checkAvailability(String item, int need){
         int available = 0;
@@ -62,7 +63,7 @@ public class ProductIO {
             PreparedStatement st = dbConnection.prepareStatement(query);
             ResultSet rs = st.executeQuery(query);
             rs.next();
-            available = rs.getInt("COUNT");
+            available = rs.getInt("AMOUNT");
         } catch (SQLException ex) {
             Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,7 +76,7 @@ public class ProductIO {
     public static boolean substractComponent(String item, int amount){
         if(checkAvailability(item, amount)){
             try {
-                String query = "update COMPONENTS set COUNT = COUNT - " + amount +
+                String query = "update COMPONENTS set AMOUNT = AMOUNT - " + amount +
                                " where COMPONENT_NAME = \"" + item + "\";";
                 PreparedStatement st = dbConnection.prepareStatement(query);
                 st.execute(query);
@@ -92,7 +93,7 @@ public class ProductIO {
     }
     public static boolean addComponent(String item, int amount){
         try {
-            String query = "update COMPONENTS set COUNT = COUNT + " + amount +
+            String query = "update COMPONENTS set AMOUNT = AMOUNT  + " + amount +
                            " where COMPONENT_NAME = \"" + item + "\";";
             PreparedStatement st = dbConnection.prepareStatement(query);
             st.execute(query);
@@ -101,5 +102,76 @@ public class ProductIO {
             Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
         }
             return true;
+    }
+    
+    public static ProductList readProducts(){
+        ProductList list = new ProductList(productCount());
+        try {
+            String query = "select * from PRODUCTS;";
+            PreparedStatement st = dbConnection.prepareStatement(query);
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                Product p = new Product();
+                p.setName(rs.getString("product_name"));
+                p.setComponents(rs.getString("component_list"));
+                p.setPrice(rs.getInt("price"));
+                list.add(p);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    public static ComponentList readComponents(){
+        ComponentList list = new ComponentList(componentCount());
+        try {
+            String query = "select * from COMPONENTS;";
+            PreparedStatement st = dbConnection.prepareStatement(query);
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                Component c = new Component();
+                c.setName(rs.getString("component_name"));
+                c.setAmount(rs.getInt("amount"));
+                list.add(c);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    private static int productCount(){
+        try {
+            String query = "select count(*) from products;";
+            PreparedStatement st = dbConnection.prepareStatement(query);
+            ResultSet rs = st.executeQuery(query);
+            rs.next();
+            int count = rs.getInt(1);
+            rs.close();
+            st.close();
+            return count; 
+       } catch (SQLException ex) {
+            Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+    private static int componentCount(){
+        try {
+            String query = "select count(*) from components;";
+            PreparedStatement st = dbConnection.prepareStatement(query);
+            ResultSet rs = st.executeQuery(query);
+            rs.next();
+            int count = rs.getInt(1);
+            rs.close();
+            st.close();
+            return count; 
+       } catch (SQLException ex) {
+            Logger.getLogger(ProductIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 }

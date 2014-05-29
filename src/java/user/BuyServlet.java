@@ -4,35 +4,37 @@
  * and open the template in the editor.
  */
 
-import beans.Pizza;
+package user;
+
+import beans.ProductIO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author deha
+ * @author HP
  */
-@WebServlet(urlPatterns = {"/ServletGroup6"})
-public class ServletGroup6 extends HttpServlet {
-    public void init(ServletConfig config) throws ServletException{
-        super.init(config);
-        System.out.println("CFGFHFJG");
-        try{
-            Pizza piz = new Pizza("jdbc:mysql://127.0.0.1:3306/");
-        }
-        catch(Exception e){
-            throw new ServletException(e);
-        }
+public class BuyServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
     }
 
- 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -45,16 +47,7 @@ public class ServletGroup6 extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-   
-        
-        RequestDispatcher rd;
-        rd = request.getRequestDispatcher("index.jsp");
-        rd.forward(request, response);
-        System.out.println("gddgdgdg");
-        
-             PrintWriter out = response.getWriter();
-        out.println("<h1>vahid</h1>");
+        doPost(request, response);
     }
 
     /**
@@ -68,6 +61,34 @@ public class ServletGroup6 extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        String type = (String) request.getParameter("type");
+        //error
+        RequestDispatcher error = getServletContext().getRequestDispatcher("/resourceerror.jsp");
+        //success
+        RequestDispatcher success = getServletContext().getRequestDispatcher("/userJsp.jsp");
+        
+        if(type.equalsIgnoreCase("pizza")){
+            if(!ProductIO.buyPizza()){
+                error.forward(request, response);
+            }
+        }
+        else if(type.equalsIgnoreCase("salad")){
+            if(!ProductIO.buySalad()){
+                error.forward(request, response);
+            }
+        }
+        else
+            if(!ProductIO.buyComputer()){
+                error.forward(request, response);
+            }
+        
+        String message;
+        message = type + " is added to your cart.";
+        
+        request.setAttribute("message", message);
+        
+        success.forward(request, response);
     }
 
     /**

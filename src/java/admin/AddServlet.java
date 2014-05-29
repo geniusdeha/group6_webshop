@@ -4,16 +4,12 @@
  * and open the template in the editor.
  */
 
-package user;
+package admin;
 
 import beans.ProductIO;
-import beans.ProductList;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author HP
  */
-public class UserInterfaceServlet extends HttpServlet {
+public class AddServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,7 +32,6 @@ public class UserInterfaceServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -51,20 +46,7 @@ public class UserInterfaceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
-        out.println("Loading the user interface...");
-        try {
-            // JAVA CODE
-            ProductIO.initConnection("jdbc:mysql://127.0.0.1:3306/webshop");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(UserInterfaceServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ProductList list = ProductIO.readProducts();
-        ServletContext sc = getServletContext();
-        sc.setAttribute("list", list);
-        // JAVA CODE
-        RequestDispatcher disp = getServletContext().getRequestDispatcher("/userJsp.jsp");
-        disp.forward(request, response);
+        doPost(request, response);
     }
 
     /**
@@ -78,7 +60,13 @@ public class UserInterfaceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        String type = (String) request.getParameter("type");
+        int amount = Integer.parseInt(request.getParameter("number"));
+        
+        ProductIO.addComponent(type, amount);
+        
+        response.sendRedirect("http://localhost:8084/group6_webshop/admin");
     }
 
     /**

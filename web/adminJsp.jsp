@@ -1,6 +1,6 @@
 <%-- 
-    Document   : adminjsp
-    Created on : 27.May.2014, 12:09:47
+    Document   : userjsp
+    Created on : 27.May.2014, 12:09:13
     Author     : HP
 --%>
 
@@ -13,5 +13,32 @@
 </head>
 <body>
     <h1>This is the admin interface!</h1>
+    <%@ page import="beans.Component" %>
+    <jsp:useBean id="list" scope="application" class="beans.ComponentList"/>
+    <table>
+        <tr>
+            <td>Component Name</td>
+            <td>Amount</td>
+        </tr>
+        <%
+            for(int i = 0; i < list.getSize(); i++){
+        %>
+        <tr>
+            <td><%= list.getComponent(i).getName() %></td>
+            <td><%= list.getComponent(i).getAmount()%></td>
+            <td>
+                <form action="add" method="get">
+                    <input type="text" value="Enter amount" name="number"/>
+                    <input type="hidden" value="<%= list.getComponent(i).getName()%>" name="type"/>
+                    <input type="submit" value="ADD"/> 
+                </form>
+            </td>
+        </tr>
+        <% 
+            } 
+        %>
+    </table>
+    <p><%= request.getAttribute("message") %>
+    <p><a href="index.jsp">BACK</a>
 </body>
 </html>
