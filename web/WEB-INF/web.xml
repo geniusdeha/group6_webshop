@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <!-- servlets -->
-    <servlet>
-        <servlet-name>UserInterfaceServlet</servlet-name>
-        <servlet-class>user.UserInterfaceServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AdminInterfaceServlet</servlet-name>
-        <servlet-class>admin.AdminInterfaceServlet</servlet-class>
-    </servlet>
     <!-- mapping -->
     <servlet>
         <servlet-name>BuyServlet</servlet-name>
@@ -18,14 +10,6 @@
         <servlet-name>AddServlet</servlet-name>
         <servlet-class>admin.AddServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>UserInterfaceServlet</servlet-name>
-        <url-pattern>/user</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AdminInterfaceServlet</servlet-name>
-        <url-pattern>/admin</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>BuyServlet</servlet-name>
         <url-pattern>/buy</url-pattern>

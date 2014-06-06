@@ -9,11 +9,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Group 6 Webshop</title>
     </head>
     <body>
-        <a href="user">UserInterfaceServlet</a>
+        <a href="login.jsp">User Interface</a>
         <br/>
-        <a href="admin">AdminInterfaceServlet</a>
+        <a href="adminlogin.jsp">Admin Interface</a>
     </body>
 </html>

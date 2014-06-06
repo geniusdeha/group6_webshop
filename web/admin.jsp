@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>JSP Page</title>
+    <title>Admin Page</title>
 </head>
 <body>
-    <h1>This is the admin interface!</h1>
+    <h1>Welcome admin!</h1>
     <%@ page import="beans.Component" %>
     <jsp:useBean id="list" scope="application" class="beans.ComponentList"/>
     <table>
@@ -38,7 +38,7 @@
             } 
         %>
     </table>
-    <p><%= request.getAttribute("message") %>
-    <p><a href="index.jsp">BACK</a>
+    <%-- <p><%= request.getAttribute("message") %> --%>
+    <p><a href="index.jsp">Main Page</a>
 </body>
 </html>

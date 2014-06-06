@@ -6,9 +6,8 @@
 
 package user;
 
-import beans.ProductIO;
+import beans.WebshopIO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -62,33 +61,92 @@ public class BuyServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String type = (String) request.getParameter("type");
-        //error
-        RequestDispatcher error = getServletContext().getRequestDispatcher("/resourceerror.jsp");
-        //success
-        RequestDispatcher success = getServletContext().getRequestDispatcher("/userJsp.jsp");
         
-        if(type.equalsIgnoreCase("pizza")){
-            if(!ProductIO.buyPizza()){
+        String customerID = request.getParameter("customerID");
+        String quantitycomputer = request.getParameter("quantitycomputer");
+        String quantitypizza = request.getParameter("quantitypizza");
+        String quantitysalad = request.getParameter("quantitysalad");
+        
+        String pricecomputer = request.getParameter("pricecomputer");
+        String pricepizza = request.getParameter("pricepizza");
+        String pricesalad = request.getParameter("pricesalad");
+        
+        String orderReceipt = quantitycomputer + " computer, " +
+                              quantitypizza + " pizza, " + 
+                              quantitysalad + " salad";
+        
+        String message = null;
+        boolean problem = false;
+        
+        int totalPrice = Integer.parseInt(pricecomputer) * Integer.parseInt(quantitycomputer) +
+                         Integer.parseInt(pricepizza) * Integer.parseInt(quantitypizza) +
+                         Integer.parseInt(pricesalad) * Integer.parseInt(quantitysalad);
+        
+        int productCount = Integer.parseInt(quantitycomputer) +
+                           Integer.parseInt(quantitypizza) +
+                           Integer.parseInt(quantitysalad);
+              
+        if(productCount==0){
+            problem = true;
+            message = "You did not choose any products to buy!";
+            ServletContext sc = getServletContext();
+            sc.setAttribute("message", message);
+            //error
+            RequestDispatcher error = getServletContext().getRequestDispatcher("/error.jsp");
+            error.forward(request, response);
+        }
+        
+        if(Integer.parseInt(quantitypizza)>0){
+            if(!WebshopIO.buyPizza(Integer.parseInt(quantitypizza))){
+                problem = true;
+                message = "Not enough components to buy pizza.";
+                ServletContext sc = getServletContext();
+                sc.setAttribute("message", message);
+                //error
+                RequestDispatcher error = getServletContext().getRequestDispatcher("/error.jsp");
                 error.forward(request, response);
             }
         }
-        else if(type.equalsIgnoreCase("salad")){
-            if(!ProductIO.buySalad()){
+        
+        if(Integer.parseInt(quantitysalad)>0){
+            if(!WebshopIO.buySalad(Integer.parseInt(quantitysalad))){
+                problem = true;
+                message = "Not enough components to buy salad.";
+                ServletContext sc = getServletContext();
+                sc.setAttribute("message", message);
+                //error
+                RequestDispatcher error = getServletContext().getRequestDispatcher("/error.jsp");
                 error.forward(request, response);
             }
         }
-        else
-            if(!ProductIO.buyComputer()){
+        
+        if(Integer.parseInt(quantitycomputer)>0){ 
+            if(!WebshopIO.buyComputer(Integer.parseInt(quantitycomputer))){
+                problem = true;
+                message = "Not enough components to buy computer.";
+                ServletContext sc = getServletContext();
+                sc.setAttribute("message", message);
+                //error
+                RequestDispatcher error = getServletContext().getRequestDispatcher("/error.jsp");
                 error.forward(request, response);
             }
+        }
         
-        String message;
-        message = type + " is added to your cart.";
+        if(!problem){
         
-        request.setAttribute("message", message);
+            int orderNumber = WebshopIO.createOrder(customerID, orderReceipt, ("" + totalPrice));
+            message = "Your order of " + orderReceipt + " is registered with number " + orderNumber + ".\n"
+                + "You can check it under Order History in your Profile.";
         
-        success.forward(request, response);
+            ServletContext sc = getServletContext();
+            sc.setAttribute("message", message);
+            sc.setAttribute("customerID", customerID);
+            //success
+            RequestDispatcher success = getServletContext().getRequestDispatcher("/receipt.jsp");
+
+            success.forward(request, response);
+        }
+        
     }
 
     /**
