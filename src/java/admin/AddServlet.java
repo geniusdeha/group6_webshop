@@ -66,7 +66,13 @@ public class AddServlet extends HttpServlet {
         
         WebshopIO.addComponent(type, amount);
         
-        response.sendRedirect("http://localhost:8084/group6_webshop/admin");
+        String password = request.getParameter("password");
+        getServletContext().setAttribute("password", password);
+        
+        RequestDispatcher disp = getServletContext().getRequestDispatcher("/adminlogin");
+        disp.forward(request, response);
+        
+     //   response.sendRedirect("http://localhost:8084/group6_webshop/admin.jsp");
     }
 
     /**

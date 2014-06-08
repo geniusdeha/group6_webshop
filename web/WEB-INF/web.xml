@@ -10,6 +10,10 @@
         <servlet-name>AddServlet</servlet-name>
         <servlet-class>admin.AddServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminLoginServlet</servlet-name>
+        <servlet-class>admin.AdminLoginServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BuyServlet</servlet-name>
         <url-pattern>/buy</url-pattern>
@@ -17,6 +21,10 @@
     <servlet-mapping>
         <servlet-name>AddServlet</servlet-name>
         <url-pattern>/add</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminLoginServlet</servlet-name>
+        <url-pattern>/adminlogin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

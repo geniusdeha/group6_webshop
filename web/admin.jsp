@@ -31,6 +31,7 @@
                     <input type="text" value="Enter amount" name="number"/>
                     <input type="hidden" value="<%= list.getComponent(i).getName()%>" name="type"/>
                     <input type="submit" value="ADD"/> 
+                    <input type="hidden" value="root" name="password"/>
                 </form>
             </td>
         </tr>
